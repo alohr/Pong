@@ -23,7 +23,7 @@ class LoLShieldPong : public Pong
 {
 public:
     LoLShieldPong(int paddle0_pin, int paddle1_pin) :
-	Pong(ROWS, COLS, paddle0_pin, paddle1_pin) {}
+	Pong(DISPLAY_ROWS, DISPLAY_COLS, paddle0_pin, paddle1_pin) {}
 
     void showPaddle(Paddle& p) { setPaddle(p, true);  }
     void hidePaddle(Paddle& p) { setPaddle(p, false); }
@@ -35,13 +35,9 @@ public:
     void showScore();
 
 private:
-    static const int ROWS = DISPLAY_ROWS;
-    static const int COLS = DISPLAY_COLS;
-
     static const unsigned char banner[];
     static const int bannerlength;
 
-    void sayPong(int delay_ms);
     void setPaddle(const Paddle& p, bool state);
 };
 
@@ -74,15 +70,13 @@ void LoLShieldPong::showScore()
 
 	// Fill it with both scores :
 	// Left score goes up > down
-
 	i = ps1;
 	j = 6;
 	while (i >= 0 && j >= 0) {
 	    for (uint8_t k = 0; k < 5; k++) {
 		LedSign::Set(k, i, (digit[score_[0]][j] >> k) & 1);
 	    }
-	    i--;
-	    j--;
+	    i--; j--;
 	}
 
 	// Right score goes down > up
@@ -93,8 +87,7 @@ void LoLShieldPong::showScore()
 	    for (uint8_t k = 0; k < 5; k++) {
 		LedSign::Set(k + 9, i, (digit[score_[1]][j] >> k) & 1);
 	    }
-	    i++;
-	    j++;
+	    i++; j++;
 	}
 
 	delay(200);
