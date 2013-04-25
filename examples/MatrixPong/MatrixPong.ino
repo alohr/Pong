@@ -117,7 +117,8 @@ void LedMatrixPong::setPaddle(const Paddle& p, bool state)
     ledControl_.setLed(0, p.row() + 1, p.col(), state);
 }
 
-void setup() {
+void setup()
+{
     ledControl.shutdown(0, false);
     ledControl.setIntensity(0, 12);
     ledControl.clearDisplay(0);
@@ -126,7 +127,8 @@ void setup() {
     pong.startGame();
 }
 
-void loop() {
+void loop()
+{
     pong.update();
 }
 

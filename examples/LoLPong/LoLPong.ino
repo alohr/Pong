@@ -105,12 +105,14 @@ void LoLShieldPong::setPaddle(const Paddle& p, bool state)
 
 LoLShieldPong pong(PADDLE0_PIN, PADDLE1_PIN);
 
-void setup() {
+void setup()
+{
     LedSign::Init();
     pong.startGame();
 }
 
-void loop() {
+void loop()
+{
     pong.update();
 }
 
