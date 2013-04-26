@@ -21,16 +21,16 @@ static char pongchars[][8] = {
 };
 
 static char digit[][8] = {
-    { 0b0000, 0b0111, 0b0101, 0b0101, 0b0101, 0b0111, 0b0000, 0b0000 },
-    { 0b0000, 0b0001, 0b0001, 0b0001, 0b0001, 0b0001, 0b0000, 0b0000 },
-    { 0b0000, 0b0111, 0b0001, 0b0111, 0b0100, 0b0111, 0b0000, 0b0000 },
-    { 0b0000, 0b0111, 0b0001, 0b0111, 0b0001, 0b0111, 0b0000, 0b0000 },
-    { 0b0000, 0b0101, 0b0101, 0b0111, 0b0001, 0b0001, 0b0000, 0b0000 },
-    { 0b0000, 0b0111, 0b0100, 0b0111, 0b0001, 0b0111, 0b0000, 0b0000 },
-    { 0b0000, 0b0111, 0b0100, 0b0111, 0b0101, 0b0111, 0b0000, 0b0000 },
-    { 0b0000, 0b0111, 0b0001, 0b0001, 0b0001, 0b0001, 0b0000, 0b0000 },
-    { 0b0000, 0b0111, 0b0101, 0b0111, 0b0101, 0b0111, 0b0000, 0b0000 },
-    { 0b0000, 0b0111, 0b0101, 0b0111, 0b0001, 0b0111, 0b0000, 0b0000 },
+    { 0b111, 0b101, 0b101, 0b101, 0b111 },
+    { 0b001, 0b001, 0b001, 0b001, 0b001 },
+    { 0b111, 0b001, 0b111, 0b100, 0b111 },
+    { 0b111, 0b001, 0b111, 0b001, 0b111 },
+    { 0b101, 0b101, 0b111, 0b001, 0b001 },
+    { 0b111, 0b100, 0b111, 0b001, 0b111 },
+    { 0b111, 0b100, 0b111, 0b101, 0b111 },
+    { 0b111, 0b001, 0b001, 0b001, 0b001 },
+    { 0b111, 0b101, 0b111, 0b101, 0b111 },
+    { 0b111, 0b101, 0b111, 0b001, 0b111 },
 };
 
 class LedMatrixPong : public Pong
@@ -59,19 +59,15 @@ private:
     LedControl& ledControl_;
 };
 
-LedControl ledControl(DATA_PIN, CLK_PIN, CS_PIN, 1);
-LedMatrixPong pong(ledControl, PADDLE0_PIN, PADDLE1_PIN);
-
-
 void LedMatrixPong::startGame()
 {
-    ledControl.clearDisplay(0);
+    ledControl_.clearDisplay(0);
     sayPong(500);
 
     for (int row = MAX_ROW; row >= 0; row--) {
-	ledControl.setRow(0, row, 0xff);
+	ledControl_.setRow(0, row, 0xff);
 	delay(100);
-	ledControl.setRow(0, row, 0);
+	ledControl_.setRow(0, row, 0);
     }
 
     start();
@@ -89,29 +85,34 @@ void LedMatrixPong::sayPong(int delay_ms)
 
 void LedMatrixPong::showScore()
 {
-    ledControl.clearDisplay(0);
+    for (int step = 0; step < 6; step++) {
+	ledControl_.clearDisplay(0);
+	ledControl_.setLed(0, 3, 3, true);
+	ledControl_.setLed(0, 3, 4, true);
 
-    for (int row = 0; row <= MAX_ROW; row++) {
-	ledControl.setRow(0, row, 0xff);
-	delay(100);
-	ledControl.setRow(0, row, 0);
-    }
- 
-    for (int row = 1; row < 6; row++) {
-	int value = (digit[score_[0]][row] << 5) | digit[score_[1]][row];
-	if (row == 3) {
-	    value |= 0b00011000;
+	int i = step;
+	int j = 4;
+	while (i >= 0 && j >= 0) {
+	    for (int k = 0; k < 3; k++) {
+		ledControl_.setLed(0, i, 2 - k, digit[score_[0]][j] & (1<<k));
+	    }
+	    i--; j--;
 	}
-	ledControl.setRow(0, row, value);
+
+	i = 6 - step;
+	j = 0;
+	while (i <= 7 && j <= 4) {
+	    for (int k = 0; k < 3; k++) {
+		ledControl_.setLed(0, i, 7 - k, digit[score_[1]][j] & (1<<k));
+	    }
+	    i++; j++;
+	}
+	
+	delay(200);
     }
 
     delay(1500);
-
-    for (int row = MAX_ROW; row >= 0; row--) {
-	ledControl.setRow(0, row, 0xff);
-	delay(100);
-	ledControl.setRow(0, row, 0);
-    }
+    ledControl_.clearDisplay(0);
 }
 
 void LedMatrixPong::setPaddle(const Paddle& p, bool state)
@@ -119,6 +120,9 @@ void LedMatrixPong::setPaddle(const Paddle& p, bool state)
     ledControl_.setLed(0, p.row(), p.col(), state);
     ledControl_.setLed(0, p.row() + 1, p.col(), state);
 }
+
+LedControl ledControl(DATA_PIN, CLK_PIN, CS_PIN, 1);
+LedMatrixPong pong(ledControl, PADDLE0_PIN, PADDLE1_PIN);
 
 void setup()
 {
