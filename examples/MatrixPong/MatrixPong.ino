@@ -10,17 +10,17 @@ static const int PADDLE0_PIN = 0;
 static const int PADDLE1_PIN = 1;
 
 static char pongchars[][8] = {
-    { 0b00000000, 0b01111100, 0b01000010, 0b01000010,   // P
-      0b01111100, 0b01000000, 0b01000000, 0b00000000, },
-    { 0b00000000, 0b00111100, 0b01000010, 0b01000010,   // O
-      0b01000010, 0b01000010, 0b00111100, 0b00000000, },
-    { 0b00000000, 0b01000010, 0b01100010, 0b01010010,   // N
-      0b01001010, 0b01000110, 0b01000010, 0b00000000, },
-    { 0b00000000, 0b00111100, 0b01000000, 0b01000000,   // G
-      0b01111100, 0b01000010, 0b00111100, 0b00000000, },
+    { 0b00000000, 0b01111100, 0b01000010, 0b01000010,   
+      0b01111100, 0b01000000, 0b01000000, 0b00000000, }, // P
+    { 0b00000000, 0b00111100, 0b01000010, 0b01000010,   
+      0b01000010, 0b01000010, 0b00111100, 0b00000000, }, // O
+    { 0b00000000, 0b01000010, 0b01100010, 0b01010010,   
+      0b01001010, 0b01000110, 0b01000010, 0b00000000, }, // N
+    { 0b00000000, 0b00111100, 0b01000000, 0b01000000,   
+      0b01111100, 0b01000010, 0b00111100, 0b00000000, }, // G
 };
 
-static char digit[][8] = {
+static char digit[][5] = {
     { 0b111, 0b101, 0b101, 0b101, 0b111 },
     { 0b001, 0b001, 0b001, 0b001, 0b001 },
     { 0b111, 0b001, 0b111, 0b100, 0b111 },
@@ -85,12 +85,12 @@ void LedMatrixPong::sayPong(int delay_ms)
 
 void LedMatrixPong::showScore()
 {
-    for (int step = 0; step < 6; step++) {
+    for (int step = 0; step < 10; step++) {
 	ledControl_.clearDisplay(0);
 	ledControl_.setLed(0, 3, 3, true);
 	ledControl_.setLed(0, 3, 4, true);
 
-	int i = step;
+	int i = (step < 8) ? step : 14 - step;
 	int j = 4;
 	while (i >= 0 && j >= 0) {
 	    for (int k = 0; k < 3; k++) {
@@ -99,7 +99,7 @@ void LedMatrixPong::showScore()
 	    i--; j--;
 	}
 
-	i = 6 - step;
+	i = (step < 9) ? 8 - step : step - 8;
 	j = 0;
 	while (i <= 7 && j <= 4) {
 	    for (int k = 0; k < 3; k++) {
@@ -108,7 +108,7 @@ void LedMatrixPong::showScore()
 	    i++; j++;
 	}
 	
-	delay(200);
+	delay(50 + 10 * step);
     }
 
     delay(1500);
