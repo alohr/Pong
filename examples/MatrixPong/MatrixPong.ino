@@ -96,9 +96,12 @@ void LedMatrixPong::showScore()
 	delay(100);
 	ledControl.setRow(0, row, 0);
     }
-
-    for (int row = 0; row <= MAX_ROW; row++) {
+ 
+    for (int row = 1; row < 6; row++) {
 	int value = (digit[score_[0]][row] << 5) | digit[score_[1]][row];
+	if (row == 3) {
+	    value |= 0b00011000;
+	}
 	ledControl.setRow(0, row, value);
     }
 
