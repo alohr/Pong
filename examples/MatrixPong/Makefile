@@ -1,8 +1,8 @@
-BOARD_TAG = atmega328
+BOARD_TAG = uno
 
 ARDUINO_SKETCHBOOK = $(PWD)
 
-ARDUINO_PORT = /dev/tty.usbserial-A*
+ARDUINO_PORT = /dev/tty.usbmodem*
 ARDUINO_LIBS = LedControl Pong
 
 include ../../../lib/mk/Common.mk
