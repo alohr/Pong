@@ -1,5 +1,9 @@
 #include "Pong.h"
 
+// LoLShield library:
+//
+// https://code.google.com/p/lolshield/
+
 #include "Charliplexing.h"
 #include "Myfont.h"
 

@@ -34,7 +34,6 @@ protected:
     virtual void showBall(Ball& b) = 0;
     virtual void hideBall(Ball& b) = 0;
     virtual void showScore() = 0;
-
     virtual void startGame() = 0;
 
     Paddle paddle0_;

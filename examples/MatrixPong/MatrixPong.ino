@@ -1,5 +1,10 @@
 #include "Pong.h"
 
+// LedControl library:
+//
+// http://playground.arduino.cc/Main/LedControl
+// http://www.wayoda.org/arduino/ledcontrol/index.html
+
 #include "LedControl.h"
 
 static const int DATA_PIN = 12;
@@ -127,7 +132,7 @@ LedMatrixPong pong(ledControl, PADDLE0_PIN, PADDLE1_PIN);
 void setup()
 {
     ledControl.shutdown(0, false);
-    ledControl.setIntensity(0, 12);
+    ledControl.setIntensity(0, 15);
     ledControl.clearDisplay(0);
     randomSeed(analogRead(0));
 
